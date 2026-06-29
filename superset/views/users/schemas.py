@@ -36,6 +36,7 @@ class UserResponseSchema(Schema):
     is_active = Boolean()
     is_anonymous = Boolean()
     login_count = Integer()
+    edition = fields.Constant("community")
 
 
 class CurrentUserPutSchema(Schema):
