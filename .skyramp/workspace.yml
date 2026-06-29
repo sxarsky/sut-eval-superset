@@ -1,0 +1,37 @@
+# Skyramp Workspace Configuration
+workspace:
+  repoName: sxarsky/sut-eval-superset
+  repoUrl: https://github.com/sxarsky/sut-eval-superset
+metadata:
+  schemaVersion: v1
+  executorVersion: v1.3.30
+  createdAt: "2026-06-29T18:46:06.127Z"
+  updatedAt: "2026-06-29T18:46:06.135Z"
+services:
+  - serviceName: superset-backend
+    language: python
+    framework: pytest
+    testDirectory: tests/skyramp
+    api:
+      schemaPath: http://localhost:8088/swagger/v1
+      authType: bearer
+      authHeader: Authorization
+      baseUrl: http://localhost:8088/api/v1
+    runtimeDetails:
+      serverStartCommand: docker compose -p superset -f docker-compose.yml up -d --build superset superset-worker
+      serverStopCommand: docker compose -p superset -f docker-compose.yml stop superset superset-worker
+      runtime: docker
+      dockerNetwork: superset_default
+  - serviceName: superset-frontend
+    language: typescript
+    framework: playwright
+    testDirectory: superset-frontend/playwright/tests
+    api:
+      authType: none
+      authHeader: ""
+      baseUrl: http://localhost:8088
+    runtimeDetails:
+      serverStartCommand: docker compose -p superset -f docker-compose.yml up -d --build nginx superset-node superset
+      serverStopCommand: docker compose -p superset -f docker-compose.yml stop nginx superset-node superset
+      runtime: docker
+      dockerNetwork: superset_default
